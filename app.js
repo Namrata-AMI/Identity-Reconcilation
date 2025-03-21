@@ -9,6 +9,8 @@ app.use(express.json());
 
 app.use("/api" ,contactRouter);
 
+
+// connect db fn //
 main()
 .then((res)=>{
     console.log("working db");

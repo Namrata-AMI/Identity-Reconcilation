@@ -2,7 +2,7 @@ const express = require("express");
 const Contact = require("../models/contact.js");
 const router = express.Router();
 
-
+// get route //
 router.get("/identify",async(req,res)=>{
     try{
         const contacts = await Contact.find({});
@@ -17,6 +17,8 @@ router.get("/identify",async(req,res)=>{
     }
 })
 
+
+// post route //
 router.post("/identify",async(req,res)=>{
     try{
         const {email, phoneNo} = req.body;
@@ -49,15 +51,16 @@ router.post("/identify",async(req,res)=>{
         if (!primaryContact) primaryContact = existContact[0];
 
         // new emial/phone , creating secondry//
-        let secondaryContact = !existContact.find(e=> e.email === email && e.phoneNo === phoneNo);
+        let secondaryContact = !existContact.find(e=> e.email === email && e.phoneNo === phoneNo); // if not exists -> false then (!false = true)//
+
         if(secondaryContact){
-            let secondaryNewContact = await Contact.create({
+            let secondaryNewContact = await Contact.create({  // creating secondary contacts //
                 email,
                 phoneNo,
                 linkId:primaryContact._id,
                 linkPrecedence:"secondary",
             });
-            existContact.push(secondaryNewContact);
+            existContact.push(secondaryNewContact);  // pushing to [] => to track the secondary contacts//
         }
 
         return res.status(200).json({
